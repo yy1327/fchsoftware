@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <color name="primary_blue">#FF2B6CB0</color>
+    <color name="primary_dark">#FF1A365D</color>
+    <color name="background_dark">#FF0F1724</color>
+    <color name="background_light">#FFF1F5F9</color>
+    <color name="text_primary">#FF1E293B</color>
+    <color name="text_secondary">#FF64748B</color>
+    <color name="text_white">#FFFFFFFF</color>
+    <color name="text_hint">#FF94A3B8</color>
+    <color name="tab_selected_bg">#FF2B6CB0</color>
+    <color name="tab_selected_text">#FFFFFFFF</color>
+    <color name="tab_unselected_bg">#FFE2E8F0</color>
+    <color name="tab_unselected_text">#FF475569</color>
+    <color name="card_bg">#FFFFFFFF</color>
+    <color name="divider">#FFE2E8F0</color>
+    <color name="play_overlay">#80000000</color>
+    <color name="ptz_pad_bg">#FF1E293B</color>
+    <color name="toolbar_bg">#FF1A202C</color>
+    <color name="toolbar_active">#FF2B6CB0</color>
+    <color name="status_online">#FF22C55E</color>
+    <color name="status_offline">#FFEF4444</color>
+    <color name="error_red">#FFEF4444</color>
+    <color name="intercom_blue">#FF3B82F6</color>
+</resources>

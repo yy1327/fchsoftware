@@ -18,4 +18,10 @@ public class CameraActivity extends AppCompatActivity {
                 .commit();
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
 }

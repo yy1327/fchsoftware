@@ -25,4 +25,6 @@
     <color name="status_offline">#FFEF4444</color>
     <color name="error_red">#FFEF4444</color>
     <color name="intercom_blue">#FF3B82F6</color>
+    <color name="semi_transparent_white">#CCFFFFFF</color>
+    <color name="login_overlay">#99000000</color>
 </resources>

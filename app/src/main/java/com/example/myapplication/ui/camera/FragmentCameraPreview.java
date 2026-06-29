@@ -11,6 +11,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -39,6 +41,13 @@ public class FragmentCameraPreview extends Fragment {
         initViews(view);
         loadCameraData();
         setupBottomToolbar();
+
+        View topBar = view.findViewById(R.id.topBar);
+        ViewCompat.setOnApplyWindowInsetsListener(topBar, (v, insets) -> {
+            int statusBar = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top;
+            v.setPadding(v.getPaddingLeft(), statusBar, v.getPaddingRight(), v.getPaddingBottom());
+            return insets;
+        });
     }
 
     private void initViews(View view) {

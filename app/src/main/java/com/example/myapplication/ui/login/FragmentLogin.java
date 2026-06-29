@@ -14,6 +14,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.myapplication.R;
@@ -42,6 +44,13 @@ public class FragmentLogin extends Fragment {
         initViews(view);
         loadSavedData();
         setupListeners();
+
+        View contentView = view.findViewById(R.id.login_content);
+        ViewCompat.setOnApplyWindowInsetsListener(contentView, (v, insets) -> {
+            int statusBar = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top;
+            v.setPadding(v.getPaddingLeft(), statusBar + 24, v.getPaddingRight(), v.getPaddingBottom());
+            return insets;
+        });
     }
 
     private void initViews(View view) {

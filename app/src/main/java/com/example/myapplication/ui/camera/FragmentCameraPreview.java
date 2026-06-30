@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -14,20 +15,18 @@ import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.R;
-import com.example.myapplication.data.mock.MockData;
-import com.example.myapplication.data.model.BottomToolbarItem;
-
-import java.util.List;
 
 public class FragmentCameraPreview extends Fragment {
     private TextView tvCameraName;
     private TextView tvZoomLevel;
     private int zoomLevel = 1;
-    private List<BottomToolbarItem> toolbarItems;
+    private LinearLayout tvTabRealtime;
+    private LinearLayout tvTabRecording;
+    private LinearLayout tvTabMessage;
+    private LinearLayout tvTabScene;
+    private LinearLayout[] tabs;
 
     @Nullable
     @Override
@@ -41,6 +40,7 @@ public class FragmentCameraPreview extends Fragment {
         initViews(view);
         loadCameraData();
         setupBottomToolbar();
+        setupSubTabs();
 
         View topBar = view.findViewById(R.id.topBar);
         ViewCompat.setOnApplyWindowInsetsListener(topBar, (v, insets) -> {
@@ -63,19 +63,18 @@ public class FragmentCameraPreview extends Fragment {
         ivZoomIn.setOnClickListener(v -> {
             if (zoomLevel < 20) {
                 zoomLevel++;
-                tvZoomLevel.setText(zoomLevel + "x");
+                tvZoomLevel.setText(getString(R.string.zoom_level_format, zoomLevel));
             }
         });
 
         ivZoomOut.setOnClickListener(v -> {
             if (zoomLevel > 1) {
                 zoomLevel--;
-                tvZoomLevel.setText(zoomLevel + "x");
+                tvZoomLevel.setText(getString(R.string.zoom_level_format, zoomLevel));
             }
         });
 
         setupPtzControls(view);
-        setupSubTabs(view);
     }
 
     private void loadCameraData() {
@@ -87,13 +86,13 @@ public class FragmentCameraPreview extends Fragment {
         View.OnClickListener ptzClickListener = v -> {
             int id = v.getId();
             if (id == R.id.ivPtzUp) {
-                Toast.makeText(requireContext(), "向上", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), R.string.ptz_up, Toast.LENGTH_SHORT).show();
             } else if (id == R.id.ivPtzDown) {
-                Toast.makeText(requireContext(), "向下", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), R.string.ptz_down, Toast.LENGTH_SHORT).show();
             } else if (id == R.id.ivPtzLeft) {
-                Toast.makeText(requireContext(), "向左", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), R.string.ptz_left, Toast.LENGTH_SHORT).show();
             } else if (id == R.id.ivPtzRight) {
-                Toast.makeText(requireContext(), "向右", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), R.string.ptz_right, Toast.LENGTH_SHORT).show();
             }
         };
 
@@ -103,45 +102,68 @@ public class FragmentCameraPreview extends Fragment {
         view.findViewById(R.id.ivPtzRight).setOnClickListener(ptzClickListener);
     }
 
-    private void setupSubTabs(View view) {
-        TextView tvTabRealtime = view.findViewById(R.id.tvTabRealtime);
-        TextView tvTabRecording = view.findViewById(R.id.tvTabRecording);
-        TextView tvTabMessage = view.findViewById(R.id.tvTabMessage);
-        TextView tvTabScene = view.findViewById(R.id.tvTabScene);
+    private void setupSubTabs() {
+        tvTabRealtime = getView().findViewById(R.id.tvTabRealtime);
+        tvTabRecording = getView().findViewById(R.id.tvTabRecording);
+        tvTabMessage = getView().findViewById(R.id.tvTabMessage);
+        tvTabScene = getView().findViewById(R.id.tvTabScene);
 
-        TextView[] tabs = {tvTabRealtime, tvTabRecording, tvTabMessage, tvTabScene};
+        tabs = new LinearLayout[]{tvTabRealtime, tvTabRecording, tvTabMessage, tvTabScene};
 
-        for (TextView tab : tabs) {
+        for (LinearLayout tab : tabs) {
             tab.setOnClickListener(v -> {
-                for (TextView t : tabs) {
-                    t.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_hint));
-                    t.setTypeface(null, android.graphics.Typeface.NORMAL);
+                for (LinearLayout t : tabs) {
+                    TextView textView = getTabTextView(t);
+                    if (textView != null) {
+                        textView.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_hint));
+                        textView.setTypeface(null, android.graphics.Typeface.NORMAL);
+                    }
+                    View indicator = getTabIndicator(t);
+                    if (indicator != null) {
+                        indicator.setBackgroundColor(ContextCompat.getColor(requireContext(), android.R.color.transparent));
+                    }
                 }
-                tab.setTextColor(ContextCompat.getColor(requireContext(), R.color.primary_blue));
-                tab.setTypeface(null, android.graphics.Typeface.BOLD);
+                TextView textView = getTabTextView(tab);
+                if (textView != null) {
+                    textView.setTextColor(ContextCompat.getColor(requireContext(), R.color.primary_blue));
+                    textView.setTypeface(null, android.graphics.Typeface.BOLD);
+                }
+                View indicator = getTabIndicator(tab);
+                if (indicator != null) {
+                    indicator.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.primary_blue));
+                }
             });
         }
     }
 
-    private void setupBottomToolbar() {
-        RecyclerView rvBottomToolbar = getView().findViewById(R.id.rvBottomToolbar);
-        toolbarItems = MockData.getToolbarItems();
-        BottomToolbarAdapter adapter = new BottomToolbarAdapter(toolbarItems);
-        rvBottomToolbar.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
-        rvBottomToolbar.setAdapter(adapter);
+    private TextView getTabTextView(LinearLayout tab) {
+        if (tab.getChildCount() > 0 && tab.getChildAt(0) instanceof TextView) {
+            return (TextView) tab.getChildAt(0);
+        }
+        return null;
+    }
 
-        adapter.setOnToolbarItemClickListener((item, position) -> {
-            if (item.getLabel().equals("录制")) {
-                item.setActive(!item.isActive());
-                adapter.notifyItemChanged(position);
-                if (item.isActive()) {
-                    Toast.makeText(requireContext(), "开始录制", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(requireContext(), "停止录制", Toast.LENGTH_SHORT).show();
-                }
-            } else {
-                Toast.makeText(requireContext(), item.getLabel(), Toast.LENGTH_SHORT).show();
-            }
-        });
+    private View getTabIndicator(LinearLayout tab) {
+        if (tab.getChildCount() > 1) {
+            return tab.getChildAt(1);
+        }
+        return null;
+    }
+
+    private void setupBottomToolbar() {
+        getView().findViewById(R.id.btnScreenshot).setOnClickListener(v ->
+                Toast.makeText(requireContext(), R.string.camera_screenshot, Toast.LENGTH_SHORT).show());
+
+        getView().findViewById(R.id.btnRecord).setOnClickListener(v ->
+                Toast.makeText(requireContext(), R.string.camera_record, Toast.LENGTH_SHORT).show());
+
+        getView().findViewById(R.id.btnIntercom).setOnClickListener(v ->
+                Toast.makeText(requireContext(), R.string.camera_intercom, Toast.LENGTH_SHORT).show());
+
+        getView().findViewById(R.id.btnResolution).setOnClickListener(v ->
+                Toast.makeText(requireContext(), R.string.camera_resolution, Toast.LENGTH_SHORT).show());
+
+        getView().findViewById(R.id.btnPreset).setOnClickListener(v ->
+                Toast.makeText(requireContext(), R.string.camera_preset, Toast.LENGTH_SHORT).show());
     }
 }

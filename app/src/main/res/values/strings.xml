@@ -29,4 +29,9 @@
     <string name="camera_resolution">清晰度</string>
     <string name="camera_preset">预置点</string>
     <string name="camera_preview_placeholder">视频预览</string>
+    <string name="zoom_level_format">%dx</string>
+    <string name="ptz_up">向上</string>
+    <string name="ptz_down">向下</string>
+    <string name="ptz_left">向左</string>
+    <string name="ptz_right">向右</string>
 </resources>

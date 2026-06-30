@@ -6,12 +6,12 @@
     android:background="@drawable/bg_login">
 
     <LinearLayout
-        android:id="@+id/login_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center_horizontal"
         android:orientation="vertical"
         android:paddingHorizontal="32dp"
+        android:paddingTop="100dp"
         android:paddingBottom="24dp">
 
         <TextView

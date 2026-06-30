@@ -4,7 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/background_dark">
+    android:background="@color/white"
+    android:clipChildren="false"
+    android:clipToPadding="false">
 
     <LinearLayout
         android:id="@+id/topBar"
@@ -19,7 +21,8 @@
             android:id="@+id/ivBack"
             android:layout_width="32dp"
             android:layout_height="32dp"
-            android:src="@drawable/ic_back" />
+            android:src="@drawable/ic_back"
+            android:tint="@color/text_primary" />
 
         <TextView
             android:id="@+id/tvCameraName"
@@ -27,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:textColor="@color/text_white"
+            android:textColor="@color/text_primary"
             android:textSize="16sp"
             android:textStyle="bold" />
 
@@ -35,7 +38,8 @@
             android:id="@+id/ivFullscreen"
             android:layout_width="32dp"
             android:layout_height="32dp"
-            android:src="@drawable/ic_fullscreen" />
+            android:src="@drawable/ic_fullscreen"
+            android:tint="@color/text_primary" />
 
     </LinearLayout>
 
@@ -60,48 +64,104 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:orientation="horizontal"
-        android:background="@color/ptz_pad_bg">
+        android:background="@color/white">
 
-        <TextView
+        <LinearLayout
             android:id="@+id/tvTabRealtime"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center"
-            android:text="@string/camera_tab_realtime"
-            android:textColor="@color/primary_blue"
-            android:textSize="14sp"
-            android:textStyle="bold" />
+            android:orientation="vertical"
+            android:gravity="center">
 
-        <TextView
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/camera_tab_realtime"
+                android:textColor="@color/primary_blue"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <View
+                android:layout_width="24dp"
+                android:layout_height="3dp"
+                android:background="@color/primary_blue" />
+
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/tvTabRecording"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center"
-            android:text="@string/camera_tab_recording"
-            android:textColor="@color/text_hint"
-            android:textSize="14sp" />
+            android:orientation="vertical"
+            android:gravity="center">
 
-        <TextView
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/camera_tab_recording"
+                android:textColor="@color/text_secondary"
+                android:textSize="14sp" />
+
+            <View
+                android:layout_width="24dp"
+                android:layout_height="3dp"
+                android:background="@android:color/transparent" />
+
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/tvTabMessage"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center"
-            android:text="@string/camera_tab_message"
-            android:textColor="@color/text_hint"
-            android:textSize="14sp" />
+            android:orientation="vertical"
+            android:gravity="center">
 
-        <TextView
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/camera_tab_message"
+                android:textColor="@color/text_secondary"
+                android:textSize="14sp" />
+
+            <View
+                android:layout_width="24dp"
+                android:layout_height="3dp"
+                android:background="@android:color/transparent" />
+
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/tvTabScene"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center"
-            android:text="@string/camera_tab_scene"
-            android:textColor="@color/text_hint"
-            android:textSize="14sp" />
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/camera_tab_scene"
+                android:textColor="@color/text_secondary"
+                android:textSize="14sp" />
+
+            <View
+                android:layout_width="24dp"
+                android:layout_height="3dp"
+                android:background="@android:color/transparent" />
+
+        </LinearLayout>
 
     </LinearLayout>
 
@@ -109,16 +169,17 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="@color/background_dark">
+        android:background="@color/background_light">
 
         <ImageView
             android:id="@+id/ivVolume"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginStart="24dp"
-            android:background="@drawable/bg_toolbar_item"
+            android:background="@drawable/bg_toolbar_item_light"
             android:padding="8dp"
             android:src="@drawable/ic_volume"
+            android:tint="@color/text_primary"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -129,9 +190,10 @@
             android:layout_height="40dp"
             android:layout_marginStart="24dp"
             android:layout_marginTop="8dp"
-            android:background="@drawable/bg_toolbar_item"
+            android:background="@drawable/bg_toolbar_item_light"
             android:padding="8dp"
             android:src="@drawable/ic_fullscreen"
+            android:tint="@color/text_primary"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/ivVolume" />
 
@@ -139,7 +201,7 @@
             android:id="@+id/ptzPad"
             android:layout_width="200dp"
             android:layout_height="200dp"
-            android:background="@drawable/bg_ptz_pad"
+            android:background="@drawable/bg_ptz_pad_light"
             android:gravity="center"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -151,7 +213,8 @@
                 android:id="@+id/ivPtzUp"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:src="@drawable/ic_ptz_up" />
+                android:src="@drawable/ic_ptz_up"
+                android:tint="@color/text_secondary" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -164,7 +227,8 @@
                     android:id="@+id/ivPtzLeft"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:src="@drawable/ic_ptz_left" />
+                    android:src="@drawable/ic_ptz_left"
+                    android:tint="@color/text_secondary" />
 
                 <View
                     android:layout_width="0dp"
@@ -175,7 +239,8 @@
                     android:id="@+id/ivPtzRight"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:src="@drawable/ic_ptz_right" />
+                    android:src="@drawable/ic_ptz_right"
+                    android:tint="@color/text_secondary" />
 
             </LinearLayout>
 
@@ -183,7 +248,8 @@
                 android:id="@+id/ivPtzDown"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:src="@drawable/ic_ptz_down" />
+                android:src="@drawable/ic_ptz_down"
+                android:tint="@color/text_secondary" />
 
         </LinearLayout>
 
@@ -201,9 +267,10 @@
                 android:id="@+id/ivZoomIn"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:background="@drawable/bg_toolbar_item"
+                android:background="@drawable/bg_toolbar_item_light"
                 android:padding="8dp"
-                android:src="@drawable/ic_zoom_in" />
+                android:src="@drawable/ic_zoom_in"
+                android:tint="@color/text_primary" />
 
             <TextView
                 android:id="@+id/tvZoomLevel"
@@ -211,16 +278,17 @@
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="8dp"
                 android:text="1x"
-                android:textColor="@color/text_white"
+                android:textColor="@color/text_primary"
                 android:textSize="12sp" />
 
             <ImageView
                 android:id="@+id/ivZoomOut"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:background="@drawable/bg_toolbar_item"
+                android:background="@drawable/bg_toolbar_item_light"
                 android:padding="8dp"
-                android:src="@drawable/ic_zoom_out" />
+                android:src="@drawable/ic_zoom_out"
+                android:tint="@color/text_primary" />
 
         </LinearLayout>
 
@@ -229,13 +297,10 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="#FF2D3748" />
+        android:background="@color/divider" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvBottomToolbar"
-        android:layout_width="match_parent"
-        android:layout_height="72dp"
-        android:background="@color/toolbar_bg"
-        android:paddingVertical="4dp" />
+    <include
+        android:id="@+id/bottomToolbar"
+        layout="@layout/layout_bottom_toolbar" />
 
 </LinearLayout>

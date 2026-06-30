@@ -22,7 +22,6 @@ import com.example.myapplication.data.model.BaseResponse;
 import com.example.myapplication.data.model.LoginResponse;
 import com.example.myapplication.network.RetrofitClient;
 import com.example.myapplication.ui.home.HomeActivity;
-import com.example.myapplication.ui.video.VideoActivity;
 import com.example.myapplication.util.PreferencesManager;
 
 import java.security.MessageDigest;
@@ -133,7 +132,7 @@ public class FragmentLogin extends Fragment {
                             if (response.result.returnCode == 1 && token != null) {
                                 Log.d("Login", "登录成功, token=" + token);
                                 Toast.makeText(requireContext(), "登录成功", Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(requireContext(), VideoActivity.class);
+                                Intent intent = new Intent(requireContext(), HomeActivity.class);
                                 intent.putExtra("token", token);
                                 intent.putExtra("userId", response.result.userId);
                                 startActivity(intent);

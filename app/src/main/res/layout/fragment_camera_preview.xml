@@ -50,13 +50,12 @@
         android:layout_weight="1"
         android:background="@color/black">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="@string/camera_preview_placeholder"
-            android:textColor="@color/text_hint"
-            android:textSize="18sp" />
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/bg_camera_preview"
+            android:contentDescription="@null" />
 
     </FrameLayout>
 

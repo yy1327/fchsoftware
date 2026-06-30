@@ -8,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.PopupWindow;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,6 +31,7 @@ public class FragmentHome extends Fragment {
     private RecyclerView rvTabFilters;
     private RecyclerView rvCameras;
     private EditText etSearch;
+    private ImageView ivFilter;
     private TabFilterAdapter tabFilterAdapter;
     private CameraThumbnailAdapter cameraThumbnailAdapter;
     private List<TabFilter> tabFilters;
@@ -49,12 +52,14 @@ public class FragmentHome extends Fragment {
         setupTabFilters();
         setupCameraGrid();
         setupSearch();
+        setupFilterButton();
     }
 
     private void initViews(View view) {
         rvTabFilters = view.findViewById(R.id.rvTabFilters);
         rvCameras = view.findViewById(R.id.rvCameras);
         etSearch = view.findViewById(R.id.etSearch);
+        ivFilter = view.findViewById(R.id.ivFilter);
     }
 
     private void loadData() {
@@ -129,5 +134,44 @@ public class FragmentHome extends Fragment {
             }
         }
         return "全部";
+    }
+
+    private void setupFilterButton() {
+        ivFilter.setOnClickListener(v -> showFilterPopup(v));
+    }
+
+    private void showFilterPopup(View anchor) {
+        View popupView = LayoutInflater.from(getContext()).inflate(R.layout.layout_filter_menu, null);
+        PopupWindow popupWindow = new PopupWindow(popupView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+        popupWindow.setElevation(16f);
+        popupWindow.showAsDropDown(anchor, 0, 8);
+
+        popupView.findViewById(R.id.tvFilterAll).setOnClickListener(v -> {
+            selectTab("全部");
+            popupWindow.dismiss();
+        });
+
+        popupView.findViewById(R.id.tvFilterAdmin).setOnClickListener(v -> {
+            selectTab("行政办公楼");
+            popupWindow.dismiss();
+        });
+
+        popupView.findViewById(R.id.tvFilterTeaching).setOnClickListener(v -> {
+            selectTab("公共教学楼");
+            popupWindow.dismiss();
+        });
+
+        popupView.findViewById(R.id.tvFilterSquare).setOnClickListener(v -> {
+            selectTab("1号主广场");
+            popupWindow.dismiss();
+        });
+    }
+
+    private void selectTab(String label) {
+        for (int i = 0; i < tabFilters.size(); i++) {
+            tabFilters.get(i).setSelected(tabFilters.get(i).getLabel().equals(label));
+        }
+        tabFilterAdapter.notifyDataSetChanged();
+        filterCameras();
     }
 }

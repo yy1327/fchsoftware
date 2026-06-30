@@ -12,18 +12,18 @@ public class MockData {
 
     public static List<Camera> getCameras() {
         return Arrays.asList(
-            new Camera("1", "行政楼1层 C019", "行政办公楼", R.drawable.bg_camera_placeholder, true),
-            new Camera("2", "行政楼2层 C020", "行政办公楼", R.drawable.bg_camera_placeholder, true),
-            new Camera("3", "行政楼2层 C021", "行政办公楼", R.drawable.bg_camera_placeholder, true),
-            new Camera("4", "行政楼2层 C026", "行政办公楼", R.drawable.bg_camera_placeholder, true),
-            new Camera("5", "行政楼3层 C034", "行政办公楼", R.drawable.bg_camera_placeholder, true),
-            new Camera("6", "行政楼3层 C064", "行政办公楼", R.drawable.bg_camera_placeholder, false),
-            new Camera("7", "教学楼A101", "公共教学楼", R.drawable.bg_camera_placeholder, true),
-            new Camera("8", "教学楼B201", "公共教学楼", R.drawable.bg_camera_placeholder, true),
-            new Camera("9", "教学楼C301", "公共教学楼", R.drawable.bg_camera_placeholder, true),
-            new Camera("10", "广场东入口", "1号主广场", R.drawable.bg_camera_placeholder, true),
-            new Camera("11", "广场西入口", "1号主广场", R.drawable.bg_camera_placeholder, false),
-            new Camera("12", "广场中心", "1号主广场", R.drawable.bg_camera_placeholder, true)
+            new Camera("1", "行政楼1层 C019", "行政办公楼", R.drawable.ic_camera_thumbnail, true),
+            new Camera("2", "行政楼2层 C020", "行政办公楼", R.drawable.ic_camera_thumbnail, true),
+            new Camera("3", "行政楼2层 C021", "行政办公楼", R.drawable.ic_camera_thumbnail, true),
+            new Camera("4", "行政楼2层 C026", "行政办公楼", R.drawable.ic_camera_thumbnail, true),
+            new Camera("5", "行政楼3层 C034", "行政办公楼", R.drawable.ic_camera_thumbnail, true),
+            new Camera("6", "行政楼3层 C064", "行政办公楼", R.drawable.ic_camera_thumbnail, false),
+            new Camera("7", "教学楼A101", "公共教学楼", R.drawable.ic_camera_thumbnail, true),
+            new Camera("8", "教学楼B201", "公共教学楼", R.drawable.ic_camera_thumbnail, true),
+            new Camera("9", "教学楼C301", "公共教学楼", R.drawable.ic_camera_thumbnail, true),
+            new Camera("10", "广场东入口", "1号主广场", R.drawable.ic_camera_thumbnail, true),
+            new Camera("11", "广场西入口", "1号主广场", R.drawable.ic_camera_thumbnail, false),
+            new Camera("12", "广场中心", "1号主广场", R.drawable.ic_camera_thumbnail, true)
         );
     }
 

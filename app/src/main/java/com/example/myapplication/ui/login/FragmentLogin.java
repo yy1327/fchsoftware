@@ -3,6 +3,7 @@ package com.example.myapplication.ui.login;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,8 +18,19 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.myapplication.R;
+import com.example.myapplication.data.model.BaseResponse;
+import com.example.myapplication.data.model.LoginResponse;
+import com.example.myapplication.network.RetrofitClient;
 import com.example.myapplication.ui.home.HomeActivity;
+import com.example.myapplication.ui.video.VideoActivity;
 import com.example.myapplication.util.PreferencesManager;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
 
 public class FragmentLogin extends Fragment {
     private EditText etPhone;
@@ -102,8 +114,62 @@ public class FragmentLogin extends Fragment {
             prefsManager.setRememberPassword(false);
         }
 
-        Intent intent = new Intent(requireContext(), HomeActivity.class);
-        startActivity(intent);
-        requireActivity().finish();
+        // 调用登录接口（密码MD5加密）
+        String md5Password = md5(password);
+        Log.d("Login", "尝试登录: phone=" + phone + ", md5=" + md5Password);
+        RetrofitClient.getInstance()
+                .getApiService()
+                .login(phone, md5Password)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new DisposableObserver<BaseResponse<LoginResponse>>() {
+                    @Override
+                    public void onNext(BaseResponse<LoginResponse> response) {
+                        if (response.result != null) {
+                            String token = response.result.authToken != null ? response.result.authToken : response.result.authtoken;
+                            Log.d("Login", "result: return=" + response.result.returnCode
+                                    + ", token=" + token
+                                    + ", userId=" + response.result.userId);
+                            if (response.result.returnCode == 1 && token != null) {
+                                Log.d("Login", "登录成功, token=" + token);
+                                Toast.makeText(requireContext(), "登录成功", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(requireContext(), VideoActivity.class);
+                                intent.putExtra("token", token);
+                                intent.putExtra("userId", response.result.userId);
+                                startActivity(intent);
+                                requireActivity().finish();
+                            } else {
+                                Toast.makeText(requireContext(), "登录失败", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Toast.makeText(requireContext(), "登录失败", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e("Login", "请求错误: " + e.getClass().getSimpleName() + " - " + e.getMessage());
+                        Toast.makeText(requireContext(), "登录失败: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onComplete() {
+                    }
+                });
+    }
+
+    private String md5(String input) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            byte[] digest = md.digest(input.getBytes());
+            StringBuilder sb = new StringBuilder();
+            for (byte b : digest) {
+                sb.append(String.format("%02X", b & 0xff));
+            }
+            return sb.toString();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

@@ -20,7 +20,10 @@ import androidx.fragment.app.Fragment;
 import com.example.myapplication.R;
 import com.example.myapplication.data.model.BaseResponse;
 import com.example.myapplication.data.model.LoginResponse;
+import com.example.myapplication.data.sip.SipConfig;
+import com.example.myapplication.data.sip.SipService;
 import com.example.myapplication.network.RetrofitClient;
+import com.example.myapplication.service.KeepAliveManager;
 import com.example.myapplication.ui.home.HomeActivity;
 import com.example.myapplication.util.PreferencesManager;
 
@@ -132,6 +135,15 @@ public class FragmentLogin extends Fragment {
                             if (response.result.returnCode == 1 && token != null) {
                                 Log.d("Login", "登录成功, token=" + token);
                                 Toast.makeText(requireContext(), "登录成功", Toast.LENGTH_SHORT).show();
+
+                                // 配置 SIP 账号（使用手机号作为 SIP 用户名）
+                                SipConfig config = SipConfig.getInstance();
+                                config.setUsername(phone);
+                                config.setPassword(password);
+
+                                // 启动 SIP 注册
+                                registerSip();
+
                                 Intent intent = new Intent(requireContext(), HomeActivity.class);
                                 intent.putExtra("token", token);
                                 intent.putExtra("userId", response.result.userId);
@@ -169,6 +181,54 @@ public class FragmentLogin extends Fragment {
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    private void registerSip() {
+        try {
+            SipService sipService = SipService.getInstance(requireContext());
+            sipService.setCallback(new SipService.SipCallback() {
+                @Override
+                public void onRegistered() {
+                    Log.d("Login", "SIP 注册成功");
+                }
+
+                @Override
+                public void onRegistrationFailed(String error) {
+                    Log.e("Login", "SIP 注册失败: " + error);
+                }
+
+                @Override
+                public void onUnregistered() {
+                    Log.d("Login", "SIP 注销");
+                }
+
+                @Override
+                public void onCallIncoming(String caller) {
+                }
+
+                @Override
+                public void onCallConnected() {
+                }
+
+                @Override
+                public void onCallEnded() {
+                }
+
+                @Override
+                public void onCallFailed(String error) {
+                }
+            });
+
+            boolean result = sipService.register();
+            Log.d("Login", "SIP 注册请求: " + (result ? "已发送" : "失败"));
+
+            // 启动前台服务保活
+            KeepAliveManager.getInstance(requireContext()).startKeepAlive();
+            Log.d("Login", "前台服务已启动");
+
+        } catch (Exception e) {
+            Log.e("Login", "SIP 注册异常", e);
         }
     }
 }

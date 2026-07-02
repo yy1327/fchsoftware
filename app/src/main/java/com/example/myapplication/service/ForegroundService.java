@@ -33,7 +33,12 @@ public class ForegroundService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d(TAG, "Service started");
-        startForeground(NOTIFICATION_ID, buildNotification());
+        try {
+            startForeground(NOTIFICATION_ID, buildNotification());
+        } catch (Exception e) {
+            Log.e(TAG, "Failed to start foreground", e);
+            stopSelf();
+        }
         return START_STICKY;
     }
 
@@ -73,8 +78,13 @@ public class ForegroundService extends Service {
             PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
         );
 
-        SipService sipService = SipService.getInstance(this);
-        String status = sipService.isRegistered() ? "已注册" : "未注册";
+        String status = "未注册";
+        try {
+            SipService sipService = SipService.getInstance(this);
+            status = sipService.isRegistered() ? "已注册" : "未注册";
+        } catch (Exception e) {
+            Log.w(TAG, "Cannot get SIP status", e);
+        }
 
         return new NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("视频监控系统")

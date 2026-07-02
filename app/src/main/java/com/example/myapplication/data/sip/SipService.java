@@ -50,9 +50,14 @@ public class SipService {
     private void initSipManager() {
         try {
             sipManager = SipManager.newInstance(context);
-            Log.d(TAG, "SipManager initialized");
+            if (sipManager == null) {
+                Log.w(TAG, "SipManager is null - device may not support SIP");
+            } else {
+                Log.d(TAG, "SipManager initialized");
+            }
         } catch (Exception e) {
             Log.e(TAG, "Failed to initialize SipManager", e);
+            sipManager = null;
         }
     }
 

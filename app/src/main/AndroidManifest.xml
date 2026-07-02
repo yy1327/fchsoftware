@@ -11,6 +11,7 @@
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT"/>
 
     <application
         android:name=".MyApplication"
@@ -42,6 +43,16 @@
         <activity
             android:name=".ui.video.VideoActivity"
             android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".ui.call.VideoCallActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.MyApplication" />
+        <activity
+            android:name=".ui.call.IncomingCallActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.MyApplication"
+            android:showOnLockScreen="true"
+            android:showWhenLocked="true" />
 
         <service
             android:name=".service.ForegroundService"

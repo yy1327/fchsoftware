@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="#FF0F1724"
+    android:padding="32dp">
+
+    <!-- 来电者头像 -->
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@android:drawable/ic_menu_call"
+        android:background="@drawable/bg_call_avatar"
+        android:padding="24dp"
+        android:layout_marginBottom="24dp" />
+
+    <!-- 来电者号码 -->
+    <TextView
+        android:id="@+id/tvCallerNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="未知来电"
+        android:textColor="#FFFFFFFF"
+        android:textSize="28sp"
+        android:layout_marginBottom="8dp" />
+
+    <!-- 来电状态 -->
+    <TextView
+        android:id="@+id/tvCallState"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="来电中..."
+        android:textColor="#FF94A3B8"
+        android:textSize="16sp"
+        android:layout_marginBottom="64dp" />
+
+    <!-- 按钮区域 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <!-- 拒接按钮 -->
+        <LinearLayout
+            android:id="@+id/btnReject"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center">
+            <ImageView
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:src="@android:drawable/ic_menu_call"
+                android:background="@drawable/bg_btn_reject"
+                android:padding="16dp"
+                android:rotation="135"
+                android:contentDescription="拒接" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="拒接"
+                android:textColor="#FFEF4444"
+                android:textSize="14sp"
+                android:layout_marginTop="8dp" />
+        </LinearLayout>
+
+        <!-- 接听按钮 -->
+        <LinearLayout
+            android:id="@+id/btnAccept"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center">
+            <ImageView
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:src="@android:drawable/ic_menu_call"
+                android:background="@drawable/bg_btn_accept"
+                android:padding="16dp"
+                android:contentDescription="接听" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="接听"
+                android:textColor="#FF22C55E"
+                android:textSize="14sp"
+                android:layout_marginTop="8dp" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

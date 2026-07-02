@@ -7,6 +7,8 @@ import android.net.sip.SipProfile;
 import android.net.sip.SipRegistrationListener;
 import android.util.Log;
 
+import com.example.myapplication.data.model.CallState;
+
 public class SipService {
 
     private static final String TAG = "SipService";
@@ -21,6 +23,7 @@ public class SipService {
 
     private boolean isRegistered = false;
     private String registrationError = null;
+    private CallState callState = CallState.IDLE;
 
     public interface SipCallback {
         void onRegistered();
@@ -67,6 +70,7 @@ public class SipService {
             public void onCallEstablished(SipAudioCall call) {
                 Log.d(TAG, "Call established");
                 currentCall = call;
+                callState = CallState.CONNECTED;
                 if (callback != null) {
                     callback.onCallConnected();
                 }
@@ -76,6 +80,7 @@ public class SipService {
             public void onCallEnded(SipAudioCall call) {
                 Log.d(TAG, "Call ended");
                 currentCall = null;
+                callState = CallState.ENDED;
                 if (callback != null) {
                     callback.onCallEnded();
                 }
@@ -84,6 +89,7 @@ public class SipService {
             @Override
             public void onCallBusy(SipAudioCall call) {
                 Log.d(TAG, "Call busy");
+                callState = CallState.FAILED;
                 if (callback != null) {
                     callback.onCallFailed("对方忙");
                 }
@@ -92,6 +98,7 @@ public class SipService {
             @Override
             public void onError(SipAudioCall call, int errorCode, String errorMessage) {
                 Log.e(TAG, "Call error: " + errorCode + " - " + errorMessage);
+                callState = CallState.FAILED;
                 if (callback != null) {
                     callback.onCallFailed(errorMessage);
                 }
@@ -183,6 +190,7 @@ public class SipService {
             String targetUri = "sip:" + targetUsername + "@" + config.getDomain();
 
             if (sipManager != null) {
+                callState = CallState.CALLING;
                 currentCall = sipManager.makeAudioCall(
                     sipProfile.getUriString(),
                     targetUri,
@@ -196,6 +204,7 @@ public class SipService {
 
         } catch (Exception e) {
             Log.e(TAG, "Failed to make call", e);
+            callState = CallState.FAILED;
             if (callback != null) {
                 callback.onCallFailed(e.getMessage());
             }
@@ -206,6 +215,7 @@ public class SipService {
     public void answerCall() {
         if (currentCall != null) {
             try {
+                callState = CallState.CONNECTED;
                 currentCall.answerCall(30);
                 Log.d(TAG, "Call answered");
             } catch (Exception e) {
@@ -220,6 +230,7 @@ public class SipService {
                 currentCall.endCall();
                 currentCall.close();
                 currentCall = null;
+                callState = CallState.ENDED;
                 Log.d(TAG, "Call hung up");
             } catch (Exception e) {
                 Log.e(TAG, "Failed to hang up", e);
@@ -237,6 +248,10 @@ public class SipService {
 
     public SipAudioCall getCurrentCall() {
         return currentCall;
+    }
+
+    public CallState getCallState() {
+        return callState;
     }
 
     public void destroy() {

@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -26,6 +27,7 @@ import com.example.myapplication.data.model.Camera;
 import com.example.myapplication.data.model.CameraListResponse;
 import com.example.myapplication.data.model.TabFilter;
 import com.example.myapplication.network.RetrofitClient;
+import com.example.myapplication.ui.call.VideoCallActivity;
 import com.example.myapplication.ui.camera.CameraActivity;
 
 import java.util.ArrayList;
@@ -77,6 +79,8 @@ public class FragmentHome extends Fragment {
         rvCameras = view.findViewById(R.id.rvCameras);
         etSearch = view.findViewById(R.id.etSearch);
         ivFilter = view.findViewById(R.id.ivFilter);
+        ImageView fabCall = view.findViewById(R.id.fabCall);
+        fabCall.setOnClickListener(v -> showCallDialog());
     }
 
     private void loadData() {
@@ -282,5 +286,26 @@ public class FragmentHome extends Fragment {
         }
         tabFilterAdapter.notifyDataSetChanged();
         filterCameras();
+    }
+
+    private void showCallDialog() {
+        EditText input = new EditText(requireContext());
+        input.setHint("输入对方号码");
+        input.setInputType(android.text.InputType.TYPE_CLASS_PHONE);
+        input.setPadding(48, 32, 48, 16);
+
+        new AlertDialog.Builder(requireContext())
+            .setTitle("发起呼叫")
+            .setView(input)
+            .setPositiveButton("呼叫", (dialog, which) -> {
+                String target = input.getText().toString().trim();
+                if (!target.isEmpty()) {
+                    VideoCallActivity.start(requireActivity(), target);
+                } else {
+                    Toast.makeText(requireContext(), "请输入号码", Toast.LENGTH_SHORT).show();
+                }
+            })
+            .setNegativeButton("取消", null)
+            .show();
     }
 }

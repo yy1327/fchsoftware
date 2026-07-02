@@ -50,12 +50,28 @@
         android:layout_weight="1"
         android:background="@color/black">
 
+        <TextureView
+            android:id="@+id/textureView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
         <ImageView
+            android:id="@+id/ivPreview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
             android:src="@drawable/bg_camera_preview"
             android:contentDescription="@null" />
+
+        <TextView
+            android:id="@+id/tvLoading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="正在连接..."
+            android:textColor="@color/text_white"
+            android:textSize="14sp"
+            android:visibility="gone" />
 
     </FrameLayout>
 

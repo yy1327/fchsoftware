@@ -3,17 +3,20 @@ package com.example.myapplication.data.model;
 import com.google.gson.annotations.SerializedName;
 
 public class Cameras {
-    @SerializedName("cameraId")
+    @SerializedName("CameraID")
     private String cameraId;
 
-    @SerializedName("cameraName")
+    @SerializedName("CameraName")
     private String cameraName;
 
     @SerializedName("cameraPhoto2")
     private String cameraPhoto2;
 
-    @SerializedName("cameraStatus")
-    private int cameraStatus;
+    @SerializedName("CameraCode")
+    private String cameraCode;
+
+    @SerializedName("VideoRelayInfo")
+    private VideoRelayInfo videoRelayInfo;
 
     public String getCameraId() {
         return cameraId;
@@ -27,7 +30,19 @@ public class Cameras {
         return cameraPhoto2;
     }
 
-    public int getCameraStatus() {
-        return cameraStatus;
+    public String getCameraCode() {
+        return cameraCode;
+    }
+
+    public String getRtspUrl() {
+        if (videoRelayInfo != null && videoRelayInfo.relayedStreamURL != null) {
+            return videoRelayInfo.relayedStreamURL;
+        }
+        return null;
+    }
+
+    public static class VideoRelayInfo {
+        @SerializedName("RelayedStreamURL")
+        public String relayedStreamURL;
     }
 }

@@ -11,11 +11,17 @@ import androidx.core.view.WindowInsetsCompat;
 import com.example.myapplication.R;
 
 public class HomeActivity extends AppCompatActivity {
+    private String token;
+    private String userId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         setContentView(R.layout.activity_home);
+
+        token = getIntent().getStringExtra("token");
+        userId = "1";
 
         View rootView = findViewById(R.id.home_container);
         ViewCompat.setOnApplyWindowInsetsListener(rootView, (v, insets) -> {
@@ -25,9 +31,22 @@ public class HomeActivity extends AppCompatActivity {
         });
 
         if (savedInstanceState == null) {
+            FragmentHome fragment = new FragmentHome();
+            Bundle args = new Bundle();
+            args.putString("token", token);
+            args.putString("userId", userId);
+            fragment.setArguments(args);
             getSupportFragmentManager().beginTransaction()
-                .replace(R.id.home_container, new FragmentHome())
+                .replace(R.id.home_container, fragment)
                 .commit();
         }
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public String getUserId() {
+        return userId;
     }
 }

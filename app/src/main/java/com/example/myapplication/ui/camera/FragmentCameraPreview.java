@@ -1,7 +1,12 @@
 package com.example.myapplication.ui.camera;
 
+import android.graphics.SurfaceTexture;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Surface;
+import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -17,10 +22,22 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.myapplication.R;
+import com.google.android.exoplayer2.ExoPlayer;
+import com.google.android.exoplayer2.MediaItem;
+import com.google.android.exoplayer2.PlaybackException;
+import com.google.android.exoplayer2.Player;
+import com.google.android.exoplayer2.video.VideoSize;
+import com.google.android.exoplayer2.source.rtsp.RtspMediaSource;
 
 public class FragmentCameraPreview extends Fragment {
+    private static final String TAG = "CameraPreview";
     private TextView tvCameraName;
     private TextView tvZoomLevel;
+    private TextView tvLoading;
+    private ImageView ivPreview;
+    private TextureView textureView;
+    private ExoPlayer exoPlayer;
+    private String rtspUrl;
     private int zoomLevel = 1;
     private LinearLayout tvTabRealtime;
     private LinearLayout tvTabRecording;
@@ -41,6 +58,7 @@ public class FragmentCameraPreview extends Fragment {
         loadCameraData();
         setupBottomToolbar();
         setupSubTabs();
+        setupVideoPlayer();
 
         View topBar = view.findViewById(R.id.topBar);
         ViewCompat.setOnApplyWindowInsetsListener(topBar, (v, insets) -> {
@@ -53,9 +71,15 @@ public class FragmentCameraPreview extends Fragment {
     private void initViews(View view) {
         tvCameraName = view.findViewById(R.id.tvCameraName);
         tvZoomLevel = view.findViewById(R.id.tvZoomLevel);
+        tvLoading = view.findViewById(R.id.tvLoading);
+        ivPreview = view.findViewById(R.id.ivPreview);
+        textureView = view.findViewById(R.id.textureView);
 
         ImageView ivBack = view.findViewById(R.id.ivBack);
-        ivBack.setOnClickListener(v -> requireActivity().finish());
+        ivBack.setOnClickListener(v -> {
+            releasePlayer();
+            requireActivity().finish();
+        });
 
         ImageView ivZoomIn = view.findViewById(R.id.ivZoomIn);
         ImageView ivZoomOut = view.findViewById(R.id.ivZoomOut);
@@ -78,8 +102,95 @@ public class FragmentCameraPreview extends Fragment {
     }
 
     private void loadCameraData() {
-        String cameraName = getArguments() != null ? getArguments().getString("camera_name", "摄像头") : "摄像头";
-        tvCameraName.setText(cameraName);
+        Bundle args = getArguments();
+        if (args != null) {
+            String cameraName = args.getString("camera_name", "摄像头");
+            rtspUrl = args.getString("rtsp_url");
+            tvCameraName.setText(cameraName);
+            Log.d(TAG, "摄像头: " + cameraName + ", RTSP: " + rtspUrl);
+        }
+    }
+
+    private void setupVideoPlayer() {
+        if (rtspUrl == null || rtspUrl.isEmpty()) {
+            Log.d(TAG, "RTSP地址为空，显示占位图");
+            return;
+        }
+
+        tvLoading.setVisibility(View.VISIBLE);
+        ivPreview.setVisibility(View.GONE);
+
+        exoPlayer = new ExoPlayer.Builder(requireContext()).build();
+        textureView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
+            @Override
+            public void onSurfaceTextureAvailable(@NonNull SurfaceTexture surface, int width, int height) {
+                exoPlayer.setVideoSurface(new Surface(surface));
+                startPlayback();
+            }
+
+            @Override
+            public void onSurfaceTextureSizeChanged(@NonNull SurfaceTexture surface, int width, int height) {
+            }
+
+            @Override
+            public boolean onSurfaceTextureDestroyed(@NonNull SurfaceTexture surface) {
+                return true;
+            }
+
+            @Override
+            public void onSurfaceTextureUpdated(@NonNull SurfaceTexture surface) {
+            }
+        });
+    }
+
+    private void startPlayback() {
+        RtspMediaSource mediaSource = new RtspMediaSource.Factory()
+                .createMediaSource(MediaItem.fromUri(Uri.parse(rtspUrl)));
+
+        exoPlayer.setMediaSource(mediaSource);
+        exoPlayer.prepare();
+
+        exoPlayer.addListener(new Player.Listener() {
+            @Override
+            public void onPlaybackStateChanged(int state) {
+                if (state == Player.STATE_READY) {
+                    Log.d(TAG, "准备完成，开始播放");
+                    tvLoading.setVisibility(View.GONE);
+                    ivPreview.setVisibility(View.GONE);
+                } else if (state == Player.STATE_ENDED) {
+                    Log.d(TAG, "播放结束");
+                }
+            }
+
+            @Override
+            public void onPlayerError(@NonNull PlaybackException error) {
+                Log.e(TAG, "播放错误: " + error.getMessage());
+                tvLoading.setVisibility(View.GONE);
+                ivPreview.setVisibility(View.VISIBLE);
+                Toast.makeText(getContext(), "播放失败: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onVideoSizeChanged(@NonNull VideoSize videoSize) {
+                Log.d(TAG, "视频尺寸: " + videoSize.width + "x" + videoSize.height);
+            }
+        });
+
+        exoPlayer.play();
+        Log.d(TAG, "开始连接: " + rtspUrl);
+    }
+
+    private void releasePlayer() {
+        if (exoPlayer != null) {
+            exoPlayer.release();
+            exoPlayer = null;
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        releasePlayer();
     }
 
     private void setupPtzControls(View view) {

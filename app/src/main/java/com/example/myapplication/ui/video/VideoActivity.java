@@ -66,8 +66,8 @@ public class VideoActivity extends AppCompatActivity {
                 .subscribe(new DisposableObserver<BaseResponse<CameraListResponse>>() {
                     @Override
                     public void onNext(BaseResponse<CameraListResponse> response) {
-                        if (response.result != null && response.result.list != null) {
-                            videoAdapter.setVideoItems(response.result.list);
+                        if (response.result != null && response.result.message != null && response.result.message.cameras != null) {
+                            videoAdapter.setVideoItems(response.result.message.cameras);
                         }
                     }
 

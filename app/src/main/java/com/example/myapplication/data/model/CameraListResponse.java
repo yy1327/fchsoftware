@@ -4,9 +4,20 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 public class CameraListResponse {
-    @SerializedName("list")
-    public List<Cameras> list;
+    @SerializedName("ret")
+    public int ret;
 
-    @SerializedName("total")
-    public int total;
+    @SerializedName("message")
+    public CameraMessage message;
+
+    public static class CameraMessage {
+        @SerializedName("all")
+        public String all;
+
+        @SerializedName("count")
+        public int count;
+
+        @SerializedName("cameras")
+        public List<Cameras> cameras;
+    }
 }

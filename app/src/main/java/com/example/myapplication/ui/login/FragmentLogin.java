@@ -139,7 +139,6 @@ public class FragmentLogin extends Fragment {
                                 // 配置 SIP 账号（使用手机号作为 SIP 用户名）
                                 SipConfig config = SipConfig.getInstance();
                                 config.setUsername(phone);
-                                config.setPassword(password);
 
                                 // 启动 SIP 注册
                                 registerSip();

@@ -4,11 +4,11 @@ public class SipConfig {
 
     private static final SipConfig INSTANCE = new SipConfig();
 
-    private String serverHost = "172.16.10.169";
+    private String serverHost = "10.10.30.102";
     private int serverPort = 5060;
-    private String username = "18500000009";
-    private String password = "123456";
-    private String domain = "172.16.10.169";
+    private String username = "18500000008";
+    private String password = "111111";
+    private String domain = "10.10.30.102";
     private int callTimeout = 30;
 
     private SipConfig() {

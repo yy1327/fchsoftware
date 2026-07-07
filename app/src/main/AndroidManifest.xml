@@ -53,6 +53,10 @@
             android:theme="@style/Theme.MyApplication"
             android:showOnLockScreen="true"
             android:showWhenLocked="true" />
+        <activity
+            android:name=".ui.player.VlcPlayerActivity"
+            android:screenOrientation="landscape"
+            android:theme="@style/Theme.MyApplication" />
 
         <service
             android:name=".service.ForegroundService"

@@ -44,6 +44,7 @@ public class SipService {
     private CallState callState = CallState.IDLE;
     private SipCallback callback;
     private final Handler retryHandler = new Handler(Looper.getMainLooper());
+    private final Handler mainHandler = new Handler(Looper.getMainLooper());
     private Set<String> processedInviteCseqs = new HashSet<>();
     private String ackMessage;
 
@@ -145,7 +146,7 @@ public class SipService {
             if (authRetryCount > MAX_AUTH_RETRY) {
                 Log.e(TAG, "Auth retry limit reached (" + MAX_AUTH_RETRY + ")");
                 if (callback != null) {
-                    callback.onRegistrationFailed("认证失败，已重试" + MAX_AUTH_RETRY + "次");
+                    mainHandler.post(() -> callback.onRegistrationFailed("认证失败，已重试" + MAX_AUTH_RETRY + "次"));
                 }
                 return;
             }
@@ -161,7 +162,7 @@ public class SipService {
                 authRetryCount = 0;
                 Log.d(TAG, "Registration successful");
                 if (callback != null) {
-                    callback.onRegistered();
+                    mainHandler.post(() -> callback.onRegistered());
                 }
             } else if (message.contains("CSeq") && message.contains("INVITE")) {
                 Log.d(TAG, "Received INVITE");
@@ -173,7 +174,7 @@ public class SipService {
                     ackMessage = message;
                     sendAckMessage(message, from);
                     if (callback != null) {
-                        callback.onCallIncoming(from);
+                        mainHandler.post(() -> callback.onCallIncoming(from));
                     }
                 }
                 if (!CSeq.isEmpty()) processedInviteCseqs.add(CSeq);
@@ -350,6 +351,27 @@ public class SipService {
     public void destroy() {
         unregister();
         instance = null;
+    }
+
+    /**
+     * 发送SIP消息（用于PTZ控制等）
+     */
+    public void sendTextMessage(String message) {
+        new Thread(() -> {
+            try {
+                if (udpSocket == null || udpSocket.isClosed()) {
+                    udpSocket = new DatagramSocket(localPort);
+                }
+                SipConfig config = SipConfig.getInstance();
+                byte[] buffer = message.getBytes();
+                DatagramPacket packet = new DatagramPacket(buffer, buffer.length,
+                        InetAddress.getByName(config.getServerHost()), config.getServerPort());
+                udpSocket.send(packet);
+                Log.d(TAG, "Sent SIP message");
+            } catch (Exception e) {
+                Log.e(TAG, "Failed to send SIP message: " + e.getMessage());
+            }
+        }).start();
     }
 
     private String md5(String input) {

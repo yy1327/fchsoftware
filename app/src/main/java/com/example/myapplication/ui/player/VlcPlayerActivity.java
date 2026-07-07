@@ -46,6 +46,12 @@ public class VlcPlayerActivity extends AppCompatActivity {
         deviceId = getIntent().getStringExtra("device_id");
         deviceName = getIntent().getStringExtra("device_name");
 
+        if (deviceId == null || deviceId.isEmpty()) {
+            Toast.makeText(this, "设备ID无效", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+
         initViews();
         initVlc();
     }

@@ -118,7 +118,7 @@ public class FragmentLogin extends Fragment {
 
         // 调用登录接口（密码MD5加密）
         String md5Password = md5(password);
-        Log.d("Login", "尝试登录: phone=" + phone + ", md5=" + md5Password);
+        Log.d("Login", "尝试登录: phone=" + phone);
         RetrofitClient.getInstance()
                 .getApiService()
                 .login(phone, md5Password)
@@ -128,9 +128,8 @@ public class FragmentLogin extends Fragment {
                     @Override
                     public void onNext(BaseResponse<LoginResponse> response) {
                         if (response.result != null) {
-                            String token = response.result.authToken != null ? response.result.authToken : response.result.authtoken;
+                            String token = response.result.authToken;
                             Log.d("Login", "result: return=" + response.result.returnCode
-                                    + ", token=" + token
                                     + ", userId=" + response.result.userId);
                             if (response.result.returnCode == 1 && token != null) {
                                 Log.d("Login", "登录成功, token=" + token);
@@ -179,7 +178,7 @@ public class FragmentLogin extends Fragment {
             return sb.toString();
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
-            return null;
+            return "";
         }
     }
 

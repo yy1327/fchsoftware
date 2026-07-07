@@ -11,7 +11,4 @@ public class LoginResponse {
 
     @SerializedName("auth-token")
     public String authToken;
-
-    @SerializedName("authtoken")
-    public String authtoken;
 }

@@ -3,7 +3,6 @@ package com.example.myapplication.ui.player;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.SurfaceView;
-import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -90,13 +89,11 @@ public class VlcPlayerActivity extends AppCompatActivity {
         options.add("--no-skip-frames");
         options.add("--no-video-title-show");
         options.add("--no-stats");
-        options.add("--no-autoplay");
 
         libVLC = new LibVLC(this, options);
         mediaPlayer = new MediaPlayer(libVLC);
 
-        mediaPlayer.setRenderWindow(surfaceView.getHolder());
-        mediaPlayer.setOnEventListener(event -> {
+        mediaPlayer.setEventListener(event -> {
             switch (event.type) {
                 case MediaPlayer.Event.Playing:
                     Log.d(TAG, "Playing");
@@ -110,8 +107,8 @@ public class VlcPlayerActivity extends AppCompatActivity {
                 case MediaPlayer.Event.EndReached:
                     Log.d(TAG, "End reached");
                     break;
-                case MediaPlayer.Event.Error:
-                    Log.e(TAG, "Error: " + event.getErrorMessage());
+                case MediaPlayer.Event.EncounteredError:
+                    Log.e(TAG, "Encountered Error");
                     runOnUiThread(() -> Toast.makeText(VlcPlayerActivity.this, "播放错误", Toast.LENGTH_SHORT).show());
                     break;
             }

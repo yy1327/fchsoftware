@@ -15,6 +15,9 @@
 - **筛选菜单** - 点击筛选图标展开地点列表快速筛选
 - **白色主题** - 监控页面采用白色UI设计
 - **悬浮对讲按钮** - 底部工具栏对讲按钮悬浮突出效果
+- **SIP功能** - 支持SIP协议注册、消息收发、视频通话
+- **VLC播放器** - 使用VLC播放器进行视频播放
+- **GreenDAO数据库** - 本地数据持久化存储
 
 ## 技术栈
 
@@ -25,35 +28,49 @@
 | 目标版本 | Android 14 (API 36) |
 | 架构 | Activity + Fragment |
 | 网络请求 | Retrofit 2.9.0 + OkHttp 4.12.0 + RxJava 2 |
+| 视频播放 | VLC 3.6.0 |
+| 数据库 | GreenDAO 3.3.0 + Room |
 | 图片加载 | Glide 4.16.0 |
 | UI 组件 | Material Design, RecyclerView, CardView |
 | 布局 | ConstraintLayout, LinearLayout |
+| 工具库 | hutool 5.3.8, fastjson 1.2.78, dom4j 2.1.3 |
 
 ## 项目结构
 
 ```
 app/src/main/java/com/example/myapplication/
-├── adapter/              # RecyclerView适配器 (VideoAdapter)
+├── adapter/              # RecyclerView适配器
 ├── data/
-│   ├── model/            # 数据模型 (Camera, Cameras, BaseResponse, LoginResponse, CameraListResponse)
+│   ├── model/            # 数据模型
+│   ├── dao/              # 数据访问对象
 │   ├── mock/             # Mock数据
+│   ├── sip/              # SIP功能模块
 │   └── repository/       # 数据仓库层
+├── greendao/             # GreenDAO数据库相关
 ├── network/              # 网络请求层
 │   ├── ApiService.java   # Retrofit接口定义
 │   └── RetrofitClient.java # 网络客户端单例
+├── service/              # 服务层
 ├── ui/
 │   ├── login/            # 登录页面
 │   ├── home/             # 首页（摄像头网格列表）
 │   ├── camera/           # 摄像头预览页面
 │   ├── video/            # 视频列表页面
+│   ├── player/           # VLC播放器页面
 │   └── widget/           # 自定义控件 (PtzPadView)
-└── util/                 # 工具类 (PreferencesManager)
+└── util/                 # 工具类
+    ├── PreferencesManager.java
+    ├── MD5Utils.java
+    ├── DeviceInfoUtil.java
+    ├── MyTimeUtils.java
+    ├── XmlUtils.java
+    └── TcpClient.java
 ```
 
 ## 页面导航
 
 ```
-LoginActivity ──▶ HomeActivity ──▶ CameraActivity
+LoginActivity ──▶ HomeActivity ──▶ CameraActivity/VlcPlayerActivity
   登录页            首页/摄像头列表      摄像头预览/云台控制
 ```
 
